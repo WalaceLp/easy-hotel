@@ -22,8 +22,8 @@ def obter_ou_criar(db: Session, modelo, defaults: dict | None = None, **filtros)
 def seed() -> None:
     with SessionLocal() as db:
         administrador = obter_ou_criar(db, Perfil, nome="ADMINISTRADOR")
-        obter_ou_criar(db, Perfil, nome="GERENTE")
-        obter_ou_criar(db, Perfil, nome="RECEPCIONISTA")
+        gerente = obter_ou_criar(db, Perfil, nome="GERENTE")
+        recepcionista = obter_ou_criar(db, Perfil, nome="RECEPCIONISTA")
 
         disponivel = obter_ou_criar(db, StatusQuarto, descricao="DISPONIVEL")
         for status in ["RESERVADO", "OCUPADO", "MANUTENCAO", "INATIVO"]:
@@ -58,6 +58,33 @@ def seed() -> None:
                     ativo=True,
                 )
             )
+
+        usuarios_demo = [
+            {
+                "nome": "Gerente",
+                "login": "gerente",
+                "senha": "gerente123",
+                "perfil_id": gerente.id,
+            },
+            {
+                "nome": "Recepcionista",
+                "login": "recepcao",
+                "senha": "recepcao123",
+                "perfil_id": recepcionista.id,
+            },
+        ]
+        for usuario_demo in usuarios_demo:
+            usuario_existente = db.scalar(select(Usuario).where(Usuario.login == usuario_demo["login"]))
+            if not usuario_existente:
+                db.add(
+                    Usuario(
+                        nome=usuario_demo["nome"],
+                        login=usuario_demo["login"],
+                        senha_hash=gerar_hash_senha(usuario_demo["senha"]),
+                        perfil_id=usuario_demo["perfil_id"],
+                        ativo=True,
+                    )
+                )
 
         db.commit()
 

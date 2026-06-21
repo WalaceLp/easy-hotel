@@ -84,3 +84,13 @@ Regras implementadas:
 * relatórios são restritos a `ADMINISTRADOR` e `GERENTE`;
 * dashboard apresenta métricas administrativas, faturamento do mês, taxa de ocupação e reservas recentes;
 * relatórios de ocupação, faturamento e reservas aceitam filtros por data quando aplicável.
+
+## Frontend
+
+Regras aplicadas na interface:
+
+* rotas internas exigem usuário autenticado;
+* formulários possuem validação com mensagens de erro;
+* operações exibem feedback de erro ou sucesso quando aplicável;
+* áreas administrativas e financeiras exibem bloqueio visual para perfis sem permissão;
+* botões de ações de reserva respeitam o status atual da reserva.

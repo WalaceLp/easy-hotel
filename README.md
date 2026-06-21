@@ -12,7 +12,7 @@ Terceira etapa concluída: backend de hóspedes, tipos de quarto, quartos e rese
 
 Quarta etapa concluída: backend de check-in, check-out, pagamentos e relatórios.
 
-O frontend funcional será implementado nas próximas etapas.
+Quinta etapa concluída: frontend funcional, responsivo, com autenticação, rotas protegidas e telas principais.
 
 ## Tecnologias
 
@@ -73,11 +73,13 @@ Para uso local fora do Docker, copie os arquivos para `.env` e ajuste as variáv
 
 ## Credenciais de desenvolvimento
 
-* Login: `admin`
-* Senha: `admin123`
-* Perfil: `ADMINISTRADOR`
+| Perfil | Login | Senha |
+| --- | --- | --- |
+| `ADMINISTRADOR` | `admin` | `admin123` |
+| `GERENTE` | `gerente` | `gerente123` |
+| `RECEPCIONISTA` | `recepcao` | `recepcao123` |
 
-Altere essa senha antes de qualquer uso em produção.
+Altere essas senhas antes de qualquer uso em produção.
 
 ## Estrutura
 
@@ -212,6 +214,46 @@ GET  /api/reservas/{id}/pagamentos
 GET  /api/metodos-pagamento
 GET  /api/relatorios/dashboard
 GET  /api/relatorios/faturamento
+```
+
+## Frontend
+
+Páginas implementadas:
+
+* Login
+* Dashboard
+* Hóspedes
+* Cadastro e edição de hóspede
+* Quartos
+* Tipos de quarto
+* Reservas
+* Nova reserva
+* Detalhes da reserva com check-in, check-out e cancelamento
+* Pagamentos
+* Usuários
+* Relatórios
+* Página 404
+
+Componentes reutilizáveis implementados:
+
+* tabela
+* busca
+* paginação
+* modal
+* campos de formulário
+* confirmação
+* alerta
+* carregamento
+* estado vazio
+* badges de status
+* cards de métricas
+
+Validação do frontend:
+
+```bash
+docker compose exec frontend npm run typecheck
+docker compose exec frontend npm run lint
+docker compose exec frontend npm run build
 ```
 
 ## Documentação

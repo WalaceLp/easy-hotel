@@ -10,6 +10,8 @@ Na terceira etapa foram implementados os módulos de hóspedes, tipos de quarto,
 
 Na quarta etapa foram implementados check-in, check-out, pagamentos, métodos de pagamento e relatórios administrativos.
 
+Na quinta etapa foi implementado o frontend React com TypeScript, rotas protegidas, contexto de autenticação, serviços Axios, formulários validados e páginas operacionais.
+
 ## Backend
 
 * `api`: rotas e dependências HTTP.
@@ -34,3 +36,5 @@ As rotas HTTP chamam services e repositories; regras como validação de login, 
 * `services`: acesso HTTP.
 * `types`: tipos TypeScript.
 * `utils`: funções auxiliares.
+
+O frontend consome a API via `services/api.ts`, guarda o token JWT em `localStorage` e protege as rotas internas com `ProtectedRoute`.

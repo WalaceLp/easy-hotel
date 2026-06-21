@@ -169,3 +169,17 @@ GET /api/relatorios/reservas
 ```
 
 Quando aplicável, aceitam filtros `data_inicio=YYYY-MM-DD` e `data_fim=YYYY-MM-DD`.
+
+## Consumo pelo frontend
+
+O frontend utiliza `VITE_API_URL` para definir a URL base da API. Em Docker, o valor padrão exposto para o navegador é:
+
+```text
+http://localhost:8000
+```
+
+Após login, o token JWT é enviado no cabeçalho:
+
+```http
+Authorization: Bearer <token>
+```

@@ -21,7 +21,10 @@ A migração inicial cria perfis, status de quarto, métodos de pagamento e tipo
 
 Credenciais de desenvolvimento:
 
-* login: `admin`
-* senha: `admin123`
+| Perfil | Login | Senha |
+| --- | --- | --- |
+| `ADMINISTRADOR` | `admin` | `admin123` |
+| `GERENTE` | `gerente` | `gerente123` |
+| `RECEPCIONISTA` | `recepcao` | `recepcao123` |
 
-Essa senha deve ser alterada antes de qualquer uso em produção.
+Essas senhas devem ser alteradas antes de qualquer uso em produção.
