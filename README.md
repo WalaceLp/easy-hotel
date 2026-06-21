@@ -6,6 +6,8 @@ Sistema web para auxiliar a gestão de hotéis de pequeno e médio porte, centra
 
 Primeira etapa concluída: estrutura inicial, Docker e banco de dados.
 
+Segunda etapa concluída: backend de autenticação com JWT, usuário autenticado e autorização por perfil.
+
 As regras de negócio, autenticação completa, endpoints CRUD, frontend funcional e testes serão implementados nas próximas etapas.
 
 ## Tecnologias
@@ -51,6 +53,7 @@ Serviços:
 * Frontend: `http://localhost:5173`
 * Backend: `http://localhost:8000`
 * Health check: `http://localhost:8000/health`
+* Documentação OpenAPI: `http://localhost:8000/docs`
 * PostgreSQL: `localhost:5432`
 
 O backend executa as migrações Alembic e o seed de desenvolvimento antes de iniciar a API.
@@ -128,12 +131,37 @@ python -m app.database.seed
 
 ## Testes
 
-A estrutura de testes está preparada em `backend/tests`. A suíte será adicionada junto da implementação das regras de negócio.
+Os testes de backend cobrem health check, autenticação, usuário inativo, rota `/me` e autorização por perfil.
 
 Comando previsto:
 
 ```bash
-pytest
+docker compose exec backend pytest
+```
+
+Lint do backend:
+
+```bash
+docker compose exec backend ruff check app tests
+```
+
+## Endpoints principais
+
+Autenticação:
+
+```http
+POST /api/auth/login
+GET  /api/auth/me
+```
+
+Usuários, restrito a `ADMINISTRADOR`:
+
+```http
+GET   /api/usuarios
+POST  /api/usuarios
+GET   /api/usuarios/{id}
+PUT   /api/usuarios/{id}
+PATCH /api/usuarios/{id}/status
 ```
 
 ## Documentação

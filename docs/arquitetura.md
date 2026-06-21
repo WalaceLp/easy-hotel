@@ -2,7 +2,9 @@
 
 O Easy Hotel será organizado em frontend React com TypeScript e backend FastAPI com SQLAlchemy.
 
-Nesta primeira etapa foram criadas a estrutura de pastas, a configuração Docker e a base de banco de dados. As regras de negócio, autenticação completa, telas e endpoints CRUD serão implementados nas próximas etapas.
+Na primeira etapa foram criadas a estrutura de pastas, a configuração Docker e a base de banco de dados.
+
+Na segunda etapa foi implementada a autenticação do backend com JWT, proteção de rotas e autorização por perfil. Os demais módulos de negócio serão implementados nas próximas etapas.
 
 ## Backend
 
@@ -13,6 +15,8 @@ Nesta primeira etapa foram criadas a estrutura de pastas, a configuração Docke
 * `repositories`: acesso ao banco.
 * `schemas`: contratos Pydantic.
 * `services`: regras de negócio.
+
+As rotas HTTP chamam services e repositories; regras como validação de login, usuário inativo, hash de senha e autorização ficam fora das rotas.
 
 ## Frontend
 

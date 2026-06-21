@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     environment: str = "development"
     database_url: str = "postgresql+psycopg://easy_hotel:easy_hotel@localhost:5432/easy_hotel"
     secret_key: str = "altere-esta-chave-em-producao"
+    algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
     backend_cors_origins: str = Field(default="http://localhost:5173")
     admin_default_name: str = "Administrador"
