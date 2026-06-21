@@ -33,6 +33,8 @@ class RelatorioService:
             faturamento_mes=faturamento_mes,
             taxa_ocupacao=self._calcular_taxa(quartos_ocupados, quartos_ativos),
             reservas_recentes=self.reserva_repository.listar()[:5],
+            checkins_hoje=self.relatorio_repository.listar_checkins_previstos(hoje),
+            checkouts_hoje=self.relatorio_repository.listar_checkouts_previstos(hoje),
         )
 
     def ocupacao(self, data_inicio: date | None, data_fim: date | None) -> OcupacaoResponse:

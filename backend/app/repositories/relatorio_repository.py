@@ -1,10 +1,10 @@
 from datetime import date
 from decimal import Decimal
 
-from sqlalchemy import func, select
-from sqlalchemy.orm import Session
+from sqlalchemy import func, or_, select
+from sqlalchemy.orm import Session, joinedload
 
-from app.models import Estadia, Hospede, Pagamento, Quarto, Reserva, StatusQuarto
+from app.models import Estadia, Hospede, Pagamento, Quarto, Reserva, StatusQuarto, Usuario
 
 
 class RelatorioRepository:
@@ -27,18 +27,56 @@ class RelatorioRepository:
         return self._contar(stmt)
 
     def contar_checkins_previstos(self, data_ref: date) -> int:
-        stmt = select(func.count(Reserva.id)).where(
-            Reserva.data_entrada == data_ref,
-            Reserva.status == "CONFIRMADA",
+        stmt = (
+            select(func.count(func.distinct(Reserva.id)))
+            .outerjoin(Estadia)
+            .where(
+                or_(
+                    (Reserva.data_entrada == data_ref) & (Reserva.status == "CONFIRMADA"),
+                    func.date(Estadia.data_checkin) == data_ref,
+                )
+            )
         )
         return self._contar(stmt)
 
     def contar_checkouts_previstos(self, data_ref: date) -> int:
-        stmt = select(func.count(Reserva.id)).where(
-            Reserva.data_saida == data_ref,
-            Reserva.status == "EM_ANDAMENTO",
+        stmt = (
+            select(func.count(func.distinct(Reserva.id)))
+            .outerjoin(Estadia)
+            .where(
+                or_(
+                    (Reserva.data_saida == data_ref) & (Reserva.status == "EM_ANDAMENTO"),
+                    func.date(Estadia.data_checkout) == data_ref,
+                )
+            )
         )
         return self._contar(stmt)
+
+    def listar_checkins_previstos(self, data_ref: date) -> list[Reserva]:
+        stmt = (
+            self._query_reservas_dashboard()
+            .outerjoin(Estadia)
+            .where(
+                or_(
+                    (Reserva.data_entrada == data_ref) & (Reserva.status == "CONFIRMADA"),
+                    func.date(Estadia.data_checkin) == data_ref,
+                )
+            )
+        )
+        return list(self.db.execute(stmt).unique().scalars().all())
+
+    def listar_checkouts_previstos(self, data_ref: date) -> list[Reserva]:
+        stmt = (
+            self._query_reservas_dashboard()
+            .outerjoin(Estadia)
+            .where(
+                or_(
+                    (Reserva.data_saida == data_ref) & (Reserva.status == "EM_ANDAMENTO"),
+                    func.date(Estadia.data_checkout) == data_ref,
+                )
+            )
+        )
+        return list(self.db.execute(stmt).unique().scalars().all())
 
     def faturamento(self, data_inicio: date | None = None, data_fim: date | None = None) -> tuple[Decimal, int]:
         stmt = select(func.coalesce(func.sum(Pagamento.valor), 0), func.count(Pagamento.id))
@@ -67,6 +105,19 @@ class RelatorioRepository:
 
     def _contar(self, stmt) -> int:
         return int(self.db.scalar(stmt) or 0)
+
+    def _query_reservas_dashboard(self):
+        return (
+            select(Reserva)
+            .options(
+                joinedload(Reserva.hospede),
+                joinedload(Reserva.quarto).joinedload(Quarto.tipo),
+                joinedload(Reserva.quarto).joinedload(Quarto.status),
+                joinedload(Reserva.usuario).joinedload(Usuario.perfil),
+                joinedload(Reserva.pagamentos),
+            )
+            .order_by(Reserva.data_entrada.asc(), Reserva.id.asc())
+        )
 
     def _filtrar_periodo_reserva(self, stmt, data_inicio: date | None, data_fim: date | None):
         if data_inicio is not None:

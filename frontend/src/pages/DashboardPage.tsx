@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { BedDouble, CalendarCheck, CalendarClock, CreditCard, DoorOpen, Hotel, UserRoundCheck, Users } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Alert } from '../components/Alert'
 import { Badge } from '../components/Badge'
 import { DataTable } from '../components/DataTable'
+import { EmptyState } from '../components/EmptyState'
 import { Loading } from '../components/Loading'
 import { MetricCard } from '../components/MetricCard'
 import { PageHeader } from '../components/PageHeader'
@@ -64,6 +66,62 @@ export function DashboardPage() {
           tone="emerald"
         />
       </div>
+      <section className="mt-6 grid gap-4 xl:grid-cols-2">
+        <div>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-950">Check-ins de hoje</h2>
+            <span className="text-sm font-medium text-slate-500">{dashboard.checkins_hoje.length} registros</span>
+          </div>
+          {dashboard.checkins_hoje.length > 0 ? (
+            <DataTable<Reserva>
+              data={dashboard.checkins_hoje}
+              getKey={(item) => item.id}
+              columns={[
+                { header: 'Hóspede', render: (item) => item.hospede.nome },
+                { header: 'Quarto', render: (item) => item.quarto_numero },
+                { header: 'Status', render: (item) => <Badge value={item.status} /> },
+                {
+                  header: 'Ação',
+                  render: (item) => (
+                    <Link className="font-semibold text-blue-700 hover:text-blue-900" to={`/reservas/${item.id}`}>
+                      Abrir
+                    </Link>
+                  )
+                }
+              ]}
+            />
+          ) : (
+            <EmptyState message="Nenhum check-in previsto para hoje." />
+          )}
+        </div>
+        <div>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-950">Check-outs de hoje</h2>
+            <span className="text-sm font-medium text-slate-500">{dashboard.checkouts_hoje.length} registros</span>
+          </div>
+          {dashboard.checkouts_hoje.length > 0 ? (
+            <DataTable<Reserva>
+              data={dashboard.checkouts_hoje}
+              getKey={(item) => item.id}
+              columns={[
+                { header: 'Hóspede', render: (item) => item.hospede.nome },
+                { header: 'Quarto', render: (item) => item.quarto_numero },
+                { header: 'Status', render: (item) => <Badge value={item.status} /> },
+                {
+                  header: 'Ação',
+                  render: (item) => (
+                    <Link className="font-semibold text-blue-700 hover:text-blue-900" to={`/reservas/${item.id}`}>
+                      Abrir
+                    </Link>
+                  )
+                }
+              ]}
+            />
+          ) : (
+            <EmptyState message="Nenhum check-out previsto para hoje." />
+          )}
+        </div>
+      </section>
       <section className="mt-6">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-slate-950">Reservas recentes</h2>

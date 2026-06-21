@@ -17,6 +17,8 @@ class DashboardResponse(BaseModel):
     faturamento_mes: Decimal
     taxa_ocupacao: float
     reservas_recentes: list[ReservaRead]
+    checkins_hoje: list[ReservaRead]
+    checkouts_hoje: list[ReservaRead]
 
 
 class OcupacaoResponse(BaseModel):

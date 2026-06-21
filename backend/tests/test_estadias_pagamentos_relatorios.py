@@ -67,6 +67,24 @@ def test_check_in_e_check_out(client: TestClient) -> None:
     assert checkout.json()["quarto"]["status"]["descricao"] == "DISPONIVEL"
 
 
+def test_dashboard_mantem_checkin_apos_checkout(client: TestClient) -> None:
+    headers = autenticar(client)
+    reserva_id = criar_reserva_confirmada(client, headers)
+
+    checkin = client.post(f"/api/reservas/{reserva_id}/check-in", headers=headers, json={})
+    assert checkin.status_code == 200
+
+    checkout = client.post(f"/api/reservas/{reserva_id}/check-out", headers=headers, json={})
+    assert checkout.status_code == 200
+
+    dashboard = client.get("/api/relatorios/dashboard", headers=headers)
+    assert dashboard.status_code == 200
+    data = dashboard.json()
+    assert data["checkins_previstos_hoje"] == 1
+    assert data["checkins_hoje"][0]["id"] == reserva_id
+    assert data["checkins_hoje"][0]["status"] == "CONCLUIDA"
+
+
 def test_nao_permite_check_in_duplicado(client: TestClient) -> None:
     headers = autenticar(client)
     reserva_id = criar_reserva_confirmada(client, headers)

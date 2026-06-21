@@ -106,6 +106,8 @@ export type Dashboard = {
   faturamento_mes: string
   taxa_ocupacao: number
   reservas_recentes: Reserva[]
+  checkins_hoje: Reserva[]
+  checkouts_hoje: Reserva[]
 }
 
 export type Faturamento = {
