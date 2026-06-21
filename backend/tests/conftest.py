@@ -10,7 +10,7 @@ from app.core.security import gerar_hash_senha
 from app.database.base import Base
 from app.database.session import get_db
 from app.main import app
-from app.models import Perfil, Usuario
+from app.models import Perfil, Quarto, StatusQuarto, TipoQuarto, Usuario
 
 
 @pytest.fixture()
@@ -29,6 +29,28 @@ def db() -> Generator[Session, None, None]:
         recepcionista = Perfil(nome="RECEPCIONISTA")
         session.add_all([administrador, gerente, recepcionista])
         session.flush()
+
+        disponivel = StatusQuarto(descricao="DISPONIVEL")
+        reservado = StatusQuarto(descricao="RESERVADO")
+        ocupado = StatusQuarto(descricao="OCUPADO")
+        manutencao = StatusQuarto(descricao="MANUTENCAO")
+        inativo = StatusQuarto(descricao="INATIVO")
+        session.add_all([disponivel, reservado, ocupado, manutencao, inativo])
+        session.flush()
+
+        solteiro = TipoQuarto(descricao="Solteiro", preco_base=120, capacidade=1, ativo=True)
+        casal = TipoQuarto(descricao="Casal", preco_base=180, capacidade=2, ativo=True)
+        session.add_all([solteiro, casal])
+        session.flush()
+
+        session.add_all(
+            [
+                Quarto(numero="101", tipo_id=solteiro.id, status_id=disponivel.id, ativo=True),
+                Quarto(numero="201", tipo_id=casal.id, status_id=disponivel.id, ativo=True),
+                Quarto(numero="301", tipo_id=casal.id, status_id=manutencao.id, ativo=True),
+            ]
+        )
+
         session.add_all(
             [
                 Usuario(

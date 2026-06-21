@@ -27,5 +27,6 @@ class Reserva(TimestampMixin, Base):
 
     hospede = relationship("Hospede", back_populates="reservas")
     quarto = relationship("Quarto", back_populates="reservas")
+    usuario = relationship("Usuario", back_populates="reservas")
     estadia = relationship("Estadia", back_populates="reserva", uselist=False)
     pagamentos = relationship("Pagamento", back_populates="reserva")

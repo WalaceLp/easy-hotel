@@ -16,3 +16,4 @@ class Usuario(TimestampMixin, Base):
     ativo: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
     perfil = relationship("Perfil", back_populates="usuarios")
+    reservas = relationship("Reserva", back_populates="usuario")

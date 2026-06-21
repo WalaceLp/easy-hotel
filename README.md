@@ -8,6 +8,8 @@ Primeira etapa concluída: estrutura inicial, Docker e banco de dados.
 
 Segunda etapa concluída: backend de autenticação com JWT, usuário autenticado e autorização por perfil.
 
+Terceira etapa concluída: backend de hóspedes, tipos de quarto, quartos e reservas.
+
 As regras de negócio, autenticação completa, endpoints CRUD, frontend funcional e testes serão implementados nas próximas etapas.
 
 ## Tecnologias
@@ -132,6 +134,7 @@ python -m app.database.seed
 ## Testes
 
 Os testes de backend cobrem health check, autenticação, usuário inativo, rota `/me` e autorização por perfil.
+Também cobrem CPF inválido/duplicado, cadastro de hóspede, disponibilidade de quartos, cálculo de valor de reserva, conflito de datas, cancelamento e bloqueio de quarto em manutenção.
 
 Comando previsto:
 
@@ -162,6 +165,37 @@ POST  /api/usuarios
 GET   /api/usuarios/{id}
 PUT   /api/usuarios/{id}
 PATCH /api/usuarios/{id}/status
+```
+
+Hóspedes:
+
+```http
+GET    /api/hospedes
+POST   /api/hospedes
+GET    /api/hospedes/{id}
+PUT    /api/hospedes/{id}
+DELETE /api/hospedes/{id}
+```
+
+Quartos e tipos:
+
+```http
+GET   /api/tipos-quarto
+POST  /api/tipos-quarto
+GET   /api/quartos
+POST  /api/quartos
+GET   /api/quartos/disponiveis
+```
+
+Reservas:
+
+```http
+GET   /api/reservas
+POST  /api/reservas
+GET   /api/reservas/{id}
+PUT   /api/reservas/{id}
+PATCH /api/reservas/{id}/confirmar
+PATCH /api/reservas/{id}/cancelar
 ```
 
 ## Documentação

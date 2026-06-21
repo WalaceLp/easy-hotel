@@ -6,6 +6,8 @@ Na primeira etapa foram criadas a estrutura de pastas, a configuração Docker e
 
 Na segunda etapa foi implementada a autenticação do backend com JWT, proteção de rotas e autorização por perfil. Os demais módulos de negócio serão implementados nas próximas etapas.
 
+Na terceira etapa foram implementados os módulos de hóspedes, tipos de quarto, quartos e reservas, mantendo validações e regras nas camadas de serviço.
+
 ## Backend
 
 * `api`: rotas e dependências HTTP.
