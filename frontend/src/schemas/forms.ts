@@ -7,7 +7,7 @@ export const loginSchema = z.object({
 
 export const hospedeSchema = z.object({
   nome: z.string().min(2, 'Informe o nome.'),
-  cpf: z.string().min(11, 'Informe um CPF válido.'),
+  cpf: z.string().regex(/^\d{11}$/, 'Informe apenas os 11 números do CPF.'),
   telefone: z.string().optional(),
   email: z.string().email('E-mail inválido.').optional().or(z.literal(''))
 })

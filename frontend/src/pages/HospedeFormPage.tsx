@@ -13,6 +13,10 @@ import type { Hospede } from '../types/api'
 
 type HospedeForm = z.infer<typeof hospedeSchema>
 
+function manterApenasDigitos(valor: string) {
+  return valor.replace(/\D/g, '').slice(0, 11)
+}
+
 export function HospedeFormPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -24,6 +28,11 @@ export function HospedeFormPage() {
     handleSubmit,
     formState: { errors, isSubmitting }
   } = useForm<HospedeForm>({ resolver: zodResolver(hospedeSchema) })
+  const cpfField = register('cpf', {
+    onChange: (event) => {
+      event.target.value = manterApenasDigitos(event.target.value)
+    }
+  })
 
   useEffect(() => {
     if (id) {
@@ -53,7 +62,14 @@ export function HospedeFormPage() {
       <form className="max-w-2xl space-y-4 rounded-lg border border-slate-200 bg-white p-5" onSubmit={handleSubmit(onSubmit)}>
         {error && <Alert type="error">{error}</Alert>}
         <TextField label="Nome" error={errors.nome} {...register('nome')} />
-        <TextField label="CPF" error={errors.cpf} {...register('cpf')} />
+        <TextField
+          label="CPF"
+          error={errors.cpf}
+          inputMode="numeric"
+          maxLength={11}
+          placeholder="Somente números"
+          {...cpfField}
+        />
         <TextField label="Telefone" error={errors.telefone} {...register('telefone')} />
         <TextField label="E-mail" error={errors.email} {...register('email')} />
         <Button disabled={isSubmitting}>Salvar</Button>
