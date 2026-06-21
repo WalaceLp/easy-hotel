@@ -11,7 +11,9 @@ class Settings(BaseSettings):
     secret_key: str = "altere-esta-chave-em-producao"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
-    backend_cors_origins: str = Field(default="http://localhost:5173")
+    backend_cors_origins: str = Field(
+        default="http://localhost:5173,http://127.0.0.1:5173,http://0.0.0.0:5173"
+    )
     admin_default_name: str = "Administrador"
     admin_default_login: str = "admin"
     admin_default_password: str = "admin123"

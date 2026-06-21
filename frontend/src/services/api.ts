@@ -1,7 +1,32 @@
 import axios from 'axios'
 
+function getApiBaseUrl() {
+  const configuredUrl = import.meta.env.VITE_API_URL
+
+  if (!configuredUrl && typeof window !== 'undefined') {
+    return `${window.location.protocol}//${window.location.hostname}:8000`
+  }
+
+  if (configuredUrl && typeof window !== 'undefined') {
+    const currentHost = window.location.hostname
+    const localHosts = ['localhost', '127.0.0.1', '0.0.0.0']
+
+    try {
+      const url = new URL(configuredUrl)
+      if (!localHosts.includes(currentHost) && localHosts.includes(url.hostname)) {
+        url.hostname = currentHost
+        return url.toString().replace(/\/$/, '')
+      }
+    } catch {
+      return configuredUrl
+    }
+  }
+
+  return configuredUrl ?? 'http://localhost:8000'
+}
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8000'
+  baseURL: getApiBaseUrl()
 })
 
 api.interceptors.request.use((config) => {
