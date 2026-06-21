@@ -4,7 +4,7 @@ import type { PerfilNome, Usuario } from '../types/api'
 export type AuthContextValue = {
   usuario: Usuario | null
   loading: boolean
-  login: (login: string, senha: string) => Promise<void>
+  login: (login: string, senha: string) => Promise<Usuario>
   logout: () => void
   hasPerfil: (...perfis: PerfilNome[]) => boolean
 }

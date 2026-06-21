@@ -24,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const response = await api.post<AuthResponse>('/api/auth/login', { login: loginValue, senha })
     localStorage.setItem('easyhotel.token', response.data.access_token)
     setUsuario(response.data.usuario)
+    return response.data.usuario
   }
 
   function logout() {
