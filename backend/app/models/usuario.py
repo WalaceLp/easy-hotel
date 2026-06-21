@@ -17,3 +17,4 @@ class Usuario(TimestampMixin, Base):
 
     perfil = relationship("Perfil", back_populates="usuarios")
     reservas = relationship("Reserva", back_populates="usuario")
+    pagamentos = relationship("Pagamento", back_populates="usuario")

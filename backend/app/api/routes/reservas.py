@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.api.dependencies import UsuarioAtual, exigir_perfis
 from app.database.session import get_db
 from app.models import Usuario
-from app.schemas import ReservaCreate, ReservaRead, ReservaUpdate
+from app.schemas import CheckInRequest, CheckOutRequest, ReservaCreate, ReservaRead, ReservaUpdate
 from app.services import ReservaService
 
 router = APIRouter(prefix="/reservas", tags=["reservas"])
@@ -69,3 +69,23 @@ def cancelar_reserva(
     _: OperadorReservas,
 ):
     return ReservaService(db).cancelar(reserva_id)
+
+
+@router.post("/{reserva_id}/check-in", response_model=ReservaRead)
+def realizar_check_in(
+    reserva_id: int,
+    dados: CheckInRequest,
+    db: Annotated[Session, Depends(get_db)],
+    usuario: UsuarioAtual,
+):
+    return ReservaService(db).check_in(reserva_id, dados, usuario)
+
+
+@router.post("/{reserva_id}/check-out", response_model=ReservaRead)
+def realizar_check_out(
+    reserva_id: int,
+    dados: CheckOutRequest,
+    db: Annotated[Session, Depends(get_db)],
+    usuario: UsuarioAtual,
+):
+    return ReservaService(db).check_out(reserva_id, dados, usuario)

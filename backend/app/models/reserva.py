@@ -30,3 +30,11 @@ class Reserva(TimestampMixin, Base):
     usuario = relationship("Usuario", back_populates="reservas")
     estadia = relationship("Estadia", back_populates="reserva", uselist=False)
     pagamentos = relationship("Pagamento", back_populates="reserva")
+
+    @property
+    def total_pago(self) -> Decimal:
+        return sum((pagamento.valor for pagamento in self.pagamentos), Decimal("0.00"))
+
+    @property
+    def saldo_pendente(self) -> Decimal:
+        return self.valor_total - self.total_pago

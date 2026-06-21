@@ -10,7 +10,9 @@ Segunda etapa concluída: backend de autenticação com JWT, usuário autenticad
 
 Terceira etapa concluída: backend de hóspedes, tipos de quarto, quartos e reservas.
 
-As regras de negócio, autenticação completa, endpoints CRUD, frontend funcional e testes serão implementados nas próximas etapas.
+Quarta etapa concluída: backend de check-in, check-out, pagamentos e relatórios.
+
+O frontend funcional será implementado nas próximas etapas.
 
 ## Tecnologias
 
@@ -135,6 +137,7 @@ python -m app.database.seed
 
 Os testes de backend cobrem health check, autenticação, usuário inativo, rota `/me` e autorização por perfil.
 Também cobrem CPF inválido/duplicado, cadastro de hóspede, disponibilidade de quartos, cálculo de valor de reserva, conflito de datas, cancelamento e bloqueio de quarto em manutenção.
+Também cobrem check-in, check-out, pagamento acima do valor da reserva, saldo pendente e autorização de relatórios.
 
 Comando previsto:
 
@@ -196,6 +199,19 @@ GET   /api/reservas/{id}
 PUT   /api/reservas/{id}
 PATCH /api/reservas/{id}/confirmar
 PATCH /api/reservas/{id}/cancelar
+POST  /api/reservas/{id}/check-in
+POST  /api/reservas/{id}/check-out
+```
+
+Pagamentos e relatórios:
+
+```http
+GET  /api/pagamentos
+POST /api/pagamentos
+GET  /api/reservas/{id}/pagamentos
+GET  /api/metodos-pagamento
+GET  /api/relatorios/dashboard
+GET  /api/relatorios/faturamento
 ```
 
 ## Documentação

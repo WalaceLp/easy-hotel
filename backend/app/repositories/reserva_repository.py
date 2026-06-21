@@ -19,10 +19,11 @@ class ReservaRepository:
                 joinedload(Reserva.quarto).joinedload(Quarto.tipo),
                 joinedload(Reserva.quarto).joinedload(Quarto.status),
                 joinedload(Reserva.usuario).joinedload(Usuario.perfil),
+                joinedload(Reserva.pagamentos),
             )
             .order_by(Reserva.data_entrada.desc(), Reserva.id.desc())
         )
-        return list(self.db.scalars(stmt).all())
+        return list(self.db.execute(stmt).unique().scalars().all())
 
     def buscar_por_id(self, reserva_id: int) -> Reserva | None:
         stmt = (
@@ -32,10 +33,11 @@ class ReservaRepository:
                 joinedload(Reserva.quarto).joinedload(Quarto.tipo),
                 joinedload(Reserva.quarto).joinedload(Quarto.status),
                 joinedload(Reserva.usuario).joinedload(Usuario.perfil),
+                joinedload(Reserva.pagamentos),
             )
             .where(Reserva.id == reserva_id)
         )
-        return self.db.scalar(stmt)
+        return self.db.execute(stmt).unique().scalar_one_or_none()
 
     def existe_conflito(
         self,

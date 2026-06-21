@@ -121,6 +121,8 @@ GET   /api/reservas/{id}
 PUT   /api/reservas/{id}
 PATCH /api/reservas/{id}/confirmar
 PATCH /api/reservas/{id}/cancelar
+POST  /api/reservas/{id}/check-in
+POST  /api/reservas/{id}/check-out
 ```
 
 Regras já aplicadas:
@@ -131,4 +133,39 @@ Regras já aplicadas:
 * reservas canceladas não bloqueiam disponibilidade;
 * cálculo automático de `valor_total`.
 
-Os módulos de check-in, check-out, pagamentos e relatórios serão adicionados nas próximas etapas.
+## Pagamentos
+
+Listagem e consulta geral são restritas a `ADMINISTRADOR` e `GERENTE`. Registro de pagamento e pagamentos por reserva também podem ser acessados por `RECEPCIONISTA`.
+
+```http
+GET  /api/pagamentos
+POST /api/pagamentos
+GET  /api/pagamentos/{id}
+GET  /api/reservas/{id}/pagamentos
+```
+
+Reservas retornam também `total_pago` e `saldo_pendente`.
+
+## Métodos de Pagamento
+
+Leitura permitida para usuários autenticados dos três perfis. Escrita restrita a `ADMINISTRADOR` e `GERENTE`.
+
+```http
+GET   /api/metodos-pagamento
+POST  /api/metodos-pagamento
+PUT   /api/metodos-pagamento/{id}
+PATCH /api/metodos-pagamento/{id}/status
+```
+
+## Relatórios
+
+Rotas restritas a `ADMINISTRADOR` e `GERENTE`.
+
+```http
+GET /api/relatorios/dashboard
+GET /api/relatorios/ocupacao
+GET /api/relatorios/faturamento
+GET /api/relatorios/reservas
+```
+
+Quando aplicável, aceitam filtros `data_inicio=YYYY-MM-DD` e `data_fim=YYYY-MM-DD`.

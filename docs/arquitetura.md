@@ -8,6 +8,8 @@ Na segunda etapa foi implementada a autenticação do backend com JWT, proteçã
 
 Na terceira etapa foram implementados os módulos de hóspedes, tipos de quarto, quartos e reservas, mantendo validações e regras nas camadas de serviço.
 
+Na quarta etapa foram implementados check-in, check-out, pagamentos, métodos de pagamento e relatórios administrativos.
+
 ## Backend
 
 * `api`: rotas e dependências HTTP.

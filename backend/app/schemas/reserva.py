@@ -39,6 +39,8 @@ class ReservaRead(BaseModel):
     status: str
     quantidade_hospedes: int
     valor_total: Decimal
+    total_pago: Decimal
+    saldo_pendente: Decimal
     hospede_id: int
     quarto_numero: str
     usuario_id: int

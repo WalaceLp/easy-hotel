@@ -22,3 +22,4 @@ class Pagamento(Base):
 
     metodo = relationship("MetodoPagamento", back_populates="pagamentos")
     reserva = relationship("Reserva", back_populates="pagamentos")
+    usuario = relationship("Usuario", back_populates="pagamentos")

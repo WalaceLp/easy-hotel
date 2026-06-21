@@ -10,7 +10,7 @@ from app.core.security import gerar_hash_senha
 from app.database.base import Base
 from app.database.session import get_db
 from app.main import app
-from app.models import Perfil, Quarto, StatusQuarto, TipoQuarto, Usuario
+from app.models import MetodoPagamento, Perfil, Quarto, StatusQuarto, TipoQuarto, Usuario
 
 
 @pytest.fixture()
@@ -48,6 +48,14 @@ def db() -> Generator[Session, None, None]:
                 Quarto(numero="101", tipo_id=solteiro.id, status_id=disponivel.id, ativo=True),
                 Quarto(numero="201", tipo_id=casal.id, status_id=disponivel.id, ativo=True),
                 Quarto(numero="301", tipo_id=casal.id, status_id=manutencao.id, ativo=True),
+            ]
+        )
+        session.add_all(
+            [
+                MetodoPagamento(descricao="DINHEIRO", ativo=True),
+                MetodoPagamento(descricao="PIX", ativo=True),
+                MetodoPagamento(descricao="CARTAO_CREDITO", ativo=True),
+                MetodoPagamento(descricao="CARTAO_DEBITO", ativo=True),
             ]
         )
 

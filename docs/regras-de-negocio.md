@@ -55,3 +55,32 @@ Regras implementadas:
 * valor total é calculado por `quantidade de diárias x preço-base do tipo do quarto`;
 * reservas pendentes podem ser confirmadas;
 * reservas pendentes, confirmadas ou em andamento podem ser canceladas.
+
+## Check-in e Check-out
+
+Regras implementadas:
+
+* check-in exige reserva confirmada;
+* check-in antes da data de entrada só é permitido para `ADMINISTRADOR`;
+* não é permitido registrar dois check-ins para a mesma reserva;
+* ao realizar check-in, a estadia é criada, a reserva muda para `EM_ANDAMENTO` e o quarto muda para `OCUPADO`;
+* check-out exige check-in prévio;
+* não é permitido registrar dois check-outs para a mesma reserva;
+* ao realizar check-out, a estadia recebe a data de saída, a reserva muda para `CONCLUIDA` e o quarto muda para `DISPONIVEL`.
+
+## Pagamentos
+
+Regras implementadas:
+
+* método de pagamento deve existir e estar ativo;
+* valor do pagamento deve ser positivo;
+* total pago não pode ultrapassar o valor total da reserva;
+* reservas informam `total_pago` e `saldo_pendente`.
+
+## Relatórios
+
+Regras implementadas:
+
+* relatórios são restritos a `ADMINISTRADOR` e `GERENTE`;
+* dashboard apresenta métricas administrativas, faturamento do mês, taxa de ocupação e reservas recentes;
+* relatórios de ocupação, faturamento e reservas aceitam filtros por data quando aplicável.

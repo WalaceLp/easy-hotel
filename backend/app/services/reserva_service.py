@@ -1,12 +1,12 @@
-from datetime import date
+from datetime import UTC, date, datetime
 from decimal import Decimal
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.models import Reserva, Usuario
-from app.repositories import HospedeRepository, QuartoRepository, ReservaRepository
-from app.schemas import ReservaCreate, ReservaUpdate
+from app.models import Estadia, Reserva, Usuario
+from app.repositories import EstadiaRepository, HospedeRepository, QuartoRepository, ReservaRepository, StatusQuartoRepository
+from app.schemas import CheckInRequest, CheckOutRequest, ReservaCreate, ReservaUpdate
 
 STATUS_RESERVA = {"PENDENTE", "CONFIRMADA", "EM_ANDAMENTO", "CONCLUIDA", "CANCELADA"}
 
@@ -14,8 +14,10 @@ STATUS_RESERVA = {"PENDENTE", "CONFIRMADA", "EM_ANDAMENTO", "CONCLUIDA", "CANCEL
 class ReservaService:
     def __init__(self, db: Session) -> None:
         self.reserva_repository = ReservaRepository(db)
+        self.estadia_repository = EstadiaRepository(db)
         self.hospede_repository = HospedeRepository(db)
         self.quarto_repository = QuartoRepository(db)
+        self.status_repository = StatusQuartoRepository(db)
 
     def listar(self) -> list[Reserva]:
         return self.reserva_repository.listar()
@@ -87,6 +89,63 @@ class ReservaService:
                 detail="Reserva concluída ou já cancelada não pode ser cancelada.",
             )
         reserva.status = "CANCELADA"
+        self.reserva_repository.salvar()
+        return self.buscar_por_id(reserva_id)
+
+    def check_in(self, reserva_id: int, dados: CheckInRequest, usuario: Usuario) -> Reserva:
+        reserva = self.buscar_por_id(reserva_id)
+        if self.estadia_repository.buscar_por_reserva_id(reserva_id):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Esta reserva já possui check-in registrado.",
+            )
+        if reserva.status != "CONFIRMADA":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Não é permitido check-in sem reserva confirmada.",
+            )
+        if reserva.data_entrada > date.today() and usuario.perfil.nome != "ADMINISTRADOR":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Não é permitido check-in antes da data de entrada.",
+            )
+
+        estadia = Estadia(
+            reserva_id=reserva.id,
+            data_checkin=datetime.now(UTC),
+            usuario_checkin_id=usuario.id,
+            observacoes=dados.observacoes,
+        )
+        self.estadia_repository.adicionar(estadia)
+        reserva.status = "EM_ANDAMENTO"
+        ocupado = self.status_repository.buscar_por_descricao("OCUPADO")
+        if ocupado:
+            reserva.quarto.status_id = ocupado.id
+        self.reserva_repository.salvar()
+        return self.buscar_por_id(reserva_id)
+
+    def check_out(self, reserva_id: int, dados: CheckOutRequest, usuario: Usuario) -> Reserva:
+        reserva = self.buscar_por_id(reserva_id)
+        estadia = self.estadia_repository.buscar_por_reserva_id(reserva_id)
+        if not estadia:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Não é permitido check-out sem check-in.",
+            )
+        if estadia.data_checkout is not None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Esta reserva já possui check-out registrado.",
+            )
+
+        estadia.data_checkout = datetime.now(UTC)
+        estadia.usuario_checkout_id = usuario.id
+        if dados.observacoes:
+            estadia.observacoes = dados.observacoes
+        reserva.status = "CONCLUIDA"
+        disponivel = self.status_repository.buscar_por_descricao("DISPONIVEL")
+        if disponivel:
+            reserva.quarto.status_id = disponivel.id
         self.reserva_repository.salvar()
         return self.buscar_por_id(reserva_id)
 
