@@ -1,19 +1,19 @@
 const statusStyles: Record<string, string> = {
-  PENDENTE: 'bg-amber-100 text-amber-800',
-  CONFIRMADA: 'bg-blue-100 text-blue-800',
-  EM_ANDAMENTO: 'bg-violet-100 text-violet-800',
-  CONCLUIDA: 'bg-emerald-100 text-emerald-800',
-  CANCELADA: 'bg-red-100 text-red-800',
-  DISPONIVEL: 'bg-emerald-100 text-emerald-800',
-  OCUPADO: 'bg-violet-100 text-violet-800',
-  RESERVADO: 'bg-blue-100 text-blue-800',
-  MANUTENCAO: 'bg-amber-100 text-amber-800',
-  INATIVO: 'bg-slate-200 text-slate-700'
+  PENDENTE: 'bg-amber-50 text-amber-800 ring-amber-200',
+  CONFIRMADA: 'bg-blue-50 text-blue-800 ring-blue-200',
+  EM_ANDAMENTO: 'bg-indigo-50 text-indigo-800 ring-indigo-200',
+  CONCLUIDA: 'bg-emerald-50 text-emerald-800 ring-emerald-200',
+  CANCELADA: 'bg-red-50 text-red-800 ring-red-200',
+  DISPONIVEL: 'bg-emerald-50 text-emerald-800 ring-emerald-200',
+  OCUPADO: 'bg-indigo-50 text-indigo-800 ring-indigo-200',
+  RESERVADO: 'bg-blue-50 text-blue-800 ring-blue-200',
+  MANUTENCAO: 'bg-amber-50 text-amber-800 ring-amber-200',
+  INATIVO: 'bg-slate-100 text-slate-700 ring-slate-200'
 }
 
 export function Badge({ value }: { value: string }) {
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${statusStyles[value] ?? 'bg-slate-100 text-slate-700'}`}>
+    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${statusStyles[value] ?? 'bg-slate-100 text-slate-700 ring-slate-200'}`}>
       {value.split('_').join(' ')}
     </span>
   )

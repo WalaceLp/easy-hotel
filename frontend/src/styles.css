@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-feature-settings:
+      "cv02",
+      "cv03",
+      "cv04",
+      "cv11";
+  }
+
+  body {
+    @apply bg-slate-100 text-slate-900 antialiased;
+  }
+
+  ::selection {
+    @apply bg-blue-200 text-blue-950;
+  }
+}
+
+@layer components {
+  .surface {
+    @apply rounded-lg border border-slate-200 bg-white shadow-sm shadow-slate-200/70;
+  }
+}

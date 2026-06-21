@@ -26,14 +26,14 @@ export function AppLayout() {
   }
 
   const sidebar = (
-    <aside className="flex h-full w-72 flex-col border-r border-slate-200 bg-white">
-      <div className="flex h-16 items-center gap-3 border-b border-slate-200 px-5">
-        <div className="grid h-9 w-9 place-items-center rounded-md bg-blue-700 text-white">
+    <aside className="flex h-full w-72 flex-col border-r border-slate-800 bg-slate-950 text-white">
+      <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5">
+        <div className="grid h-11 w-11 place-items-center rounded-md bg-blue-600 text-white shadow-lg shadow-blue-950/40">
           <Hotel size={18} />
         </div>
         <div>
-          <p className="font-bold text-slate-900">Easy Hotel</p>
-          <p className="text-xs text-slate-500">Gestão hoteleira</p>
+          <p className="font-bold text-white">Easy Hotel</p>
+          <p className="text-xs text-slate-400">Gestão hoteleira</p>
         </div>
       </div>
       <nav className="flex-1 space-y-1 p-3">
@@ -43,8 +43,8 @@ export function AppLayout() {
             to={item.to}
             onClick={() => setOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${
-                isActive ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              `flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-semibold transition ${
+                isActive ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-300 hover:bg-white/10 hover:text-white'
               }`
             }
           >
@@ -53,20 +53,23 @@ export function AppLayout() {
           </NavLink>
         ))}
       </nav>
+      <div className="border-t border-white/10 p-4 text-xs leading-relaxed text-slate-400">
+        Operação, reservas e financeiro em uma única visão.
+      </div>
     </aside>
   )
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-100">
       <div className="fixed inset-y-0 left-0 hidden lg:block">{sidebar}</div>
       {open && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setOpen(false)} />
+          <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
           <div className="absolute inset-y-0 left-0">{sidebar}</div>
         </div>
       )}
       <div className="lg:pl-72">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/90 px-4 shadow-sm backdrop-blur sm:px-6">
           <Button type="button" variant="secondary" className="h-10 w-10 p-0 lg:hidden" onClick={() => setOpen(!open)}>
             {open ? <X size={18} /> : <Menu size={18} />}
           </Button>
@@ -75,13 +78,16 @@ export function AppLayout() {
               <p className="text-sm font-semibold text-slate-900">{usuario?.nome}</p>
               <p className="text-xs text-slate-500">{usuario?.perfil.nome}</p>
             </div>
-            <Button type="button" variant="secondary" className="gap-2" onClick={handleLogout}>
+            <div className="grid h-10 w-10 place-items-center rounded-md bg-blue-50 text-sm font-bold text-blue-700 ring-1 ring-blue-100">
+              {usuario?.nome?.slice(0, 1)}
+            </div>
+            <Button type="button" variant="secondary" onClick={handleLogout}>
               <LogOut size={16} />
               Sair
             </Button>
           </div>
         </header>
-        <main className="p-4 sm:p-6">
+        <main className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

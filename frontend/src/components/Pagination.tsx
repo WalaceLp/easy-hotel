@@ -10,8 +10,8 @@ type PaginationProps = {
 export function Pagination({ page, total, pageSize, onPageChange }: PaginationProps) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
   return (
-    <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
-      <span>
+    <div className="mt-4 flex flex-col gap-3 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <span className="font-medium">
         Página {page} de {totalPages}
       </span>
       <div className="flex gap-2">
