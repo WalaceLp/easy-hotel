@@ -1,56 +1,147 @@
 # Easy Hotel
 
-Sistema web desenvolvido para auxiliar na gestão de hotéis de pequeno e médio porte.
+Sistema web para auxiliar a gestão de hotéis de pequeno e médio porte, centralizando hóspedes, quartos, reservas, estadias, pagamentos, relatórios e controle de acesso.
 
-O projeto tem como objetivo centralizar e automatizar processos como cadastro de hóspedes, gerenciamento de quartos, reservas, check-in, check-out, pagamentos e relatórios.
+## Status
 
-## Funcionalidades previstas
+Primeira etapa concluída: estrutura inicial, Docker e banco de dados.
 
-* Autenticação de usuários
-* Cadastro e gerenciamento de hóspedes
-* Cadastro e gerenciamento de quartos
-* Controle de disponibilidade dos quartos
-* Criação, alteração e cancelamento de reservas
-* Check-in e check-out
-* Registro de pagamentos
-* Controle financeiro
-* Relatórios de ocupação e faturamento
-* Controle de acesso por perfil de usuário
+As regras de negócio, autenticação completa, endpoints CRUD, frontend funcional e testes serão implementados nas próximas etapas.
 
-## Perfis de usuário
+## Tecnologias
 
-* Recepcionista
-* Gerente
-* Administrador
+### Frontend
 
-Cada perfil terá permissões específicas dentro do sistema.
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* React Router
+* Axios
+* React Hook Form
+* Zod
 
-## Módulos
+### Backend
 
-O sistema será organizado nos seguintes módulos:
+* Python
+* FastAPI
+* SQLAlchemy 2
+* Alembic
+* Pydantic
+* PostgreSQL
+* JWT
+* Passlib
+* Pytest
 
-* Usuários e acesso
-* Hóspedes
-* Quartos
-* Reservas
-* Estadias
-* Financeiro
-* Relatórios
+### Infraestrutura
 
-## Regras principais
+* Docker
+* Docker Compose
+* PostgreSQL em container
+* Variáveis de ambiente via `.env`
 
-* Não permitir o cadastro de hóspede sem CPF válido
-* Não permitir reserva de quarto indisponível
-* Não permitir conflito de reservas para o mesmo quarto
-* Calcular automaticamente o valor da estadia
-* Permitir acesso somente a usuários autenticados
-* Atualizar o status do quarto após check-in e check-out
-* Não permitir check-in sem reserva válida
-* Registrar os pagamentos relacionados às reservas
+## Execução com Docker
 
-## Status do projeto
+```bash
+docker compose up --build
+```
 
-Em desenvolvimento.
+Serviços:
+
+* Frontend: `http://localhost:5173`
+* Backend: `http://localhost:8000`
+* Health check: `http://localhost:8000/health`
+* PostgreSQL: `localhost:5432`
+
+O backend executa as migrações Alembic e o seed de desenvolvimento antes de iniciar a API.
+
+## Variáveis de ambiente
+
+Arquivos de referência:
+
+* `backend/.env.example`
+* `frontend/.env.example`
+
+Para uso local fora do Docker, copie os arquivos para `.env` e ajuste as variáveis conforme o ambiente.
+
+## Credenciais de desenvolvimento
+
+* Login: `admin`
+* Senha: `admin123`
+* Perfil: `ADMINISTRADOR`
+
+Altere essa senha antes de qualquer uso em produção.
+
+## Estrutura
+
+```text
+easy-hotel/
+├── backend/
+│   ├── alembic/
+│   ├── app/
+│   ├── tests/
+│   ├── alembic.ini
+│   ├── Dockerfile
+│   ├── pyproject.toml
+│   └── .env.example
+├── frontend/
+│   ├── src/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── .env.example
+├── database/
+│   └── init.sql
+├── docs/
+├── docker-compose.yml
+├── .gitignore
+└── README.md
+```
+
+## Banco de dados
+
+A migração inicial cria as tabelas principais:
+
+* perfis
+* usuarios
+* hospedes
+* tipos_quarto
+* status_quarto
+* quartos
+* reservas
+* estadias
+* metodos_pagamento
+* pagamentos
+
+## Migrações
+
+Dentro do container ou ambiente backend:
+
+```bash
+alembic upgrade head
+```
+
+Seed de desenvolvimento:
+
+```bash
+python -m app.database.seed
+```
+
+## Testes
+
+A estrutura de testes está preparada em `backend/tests`. A suíte será adicionada junto da implementação das regras de negócio.
+
+Comando previsto:
+
+```bash
+pytest
+```
+
+## Documentação
+
+* `docs/arquitetura.md`
+* `docs/banco-de-dados.md`
+* `docs/regras-de-negocio.md`
+* `docs/api.md`
 
 ## Equipe
 
