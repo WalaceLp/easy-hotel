@@ -10,7 +10,7 @@ import { PageHeader } from '../components/PageHeader'
 import { pagamentoSchema } from '../schemas/forms'
 import { api, getApiError } from '../services/api'
 import type { MetodoPagamento, Pagamento, Reserva } from '../types/api'
-import { formatCurrency, formatDateTime } from '../utils/formatters'
+import { formatCurrency, formatDateTime, formatPaymentMethod } from '../utils/formatters'
 
 type PagamentoForm = z.infer<typeof pagamentoSchema>
 
@@ -31,7 +31,7 @@ export function PagamentosPage() {
       api.get<MetodoPagamento[]>('/api/metodos-pagamento')
     ]).then(([pagamentosResponse, reservasResponse, metodosResponse]) => {
       setPagamentos(pagamentosResponse.data)
-      setReservas(reservasResponse.data)
+      setReservas(reservasResponse.data.filter((reserva) => Number(reserva.saldo_pendente) > 0))
       setMetodos(metodosResponse.data.filter((item) => item.ativo))
     })
   }
@@ -64,7 +64,7 @@ export function PagamentosPage() {
           </SelectField>
           <SelectField label="Método" error={errors.metodo_id} {...register('metodo_id')}>
             <option value="">Selecione</option>
-            {metodos.map((metodo) => <option key={metodo.id} value={metodo.id}>{metodo.descricao}</option>)}
+            {metodos.map((metodo) => <option key={metodo.id} value={metodo.id}>{formatPaymentMethod(metodo.descricao)}</option>)}
           </SelectField>
           <TextField label="Valor" type="number" step="0.01" error={errors.valor} {...register('valor')} />
           <div className="flex items-end"><Button disabled={isSubmitting}>Registrar</Button></div>
@@ -79,7 +79,7 @@ export function PagamentosPage() {
         columns={[
           { header: 'Data', render: (item) => formatDateTime(item.data_pagamento) },
           { header: 'Reserva', render: (item) => `#${item.reserva_id}` },
-          { header: 'Método', render: (item) => item.metodo.descricao },
+          { header: 'Método', render: (item) => formatPaymentMethod(item.metodo.descricao) },
           { header: 'Valor', render: (item) => formatCurrency(item.valor) }
         ]}
       />

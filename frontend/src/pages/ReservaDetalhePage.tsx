@@ -7,7 +7,7 @@ import { DataTable } from '../components/DataTable'
 import { PageHeader } from '../components/PageHeader'
 import { api, getApiError } from '../services/api'
 import type { Pagamento, Reserva } from '../types/api'
-import { formatCurrency, formatDate, formatDateTime } from '../utils/formatters'
+import { formatCurrency, formatDate, formatDateTime, formatPaymentMethod } from '../utils/formatters'
 
 export function ReservaDetalhePage() {
   const { id } = useParams()
@@ -77,7 +77,7 @@ export function ReservaDetalhePage() {
           getKey={(item) => item.id}
           columns={[
             { header: 'Data', render: (item) => formatDateTime(item.data_pagamento) },
-            { header: 'Método', render: (item) => item.metodo.descricao },
+            { header: 'Método', render: (item) => formatPaymentMethod(item.metodo.descricao) },
             { header: 'Valor', render: (item) => formatCurrency(item.valor) },
             { header: 'Observações', render: (item) => item.observacoes ?? '-' }
           ]}

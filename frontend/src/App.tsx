@@ -15,6 +15,13 @@ import { ReservaFormPage } from './pages/ReservaFormPage'
 import { ReservasPage } from './pages/ReservasPage'
 import { TiposQuartoPage } from './pages/TiposQuartoPage'
 import { UsuariosPage } from './pages/UsuariosPage'
+import { useAuth } from './hooks/useAuth'
+import { getHomePathForPerfil } from './utils/permissions'
+
+function HomeRedirect() {
+  const { usuario } = useAuth()
+  return <Navigate to={usuario ? getHomePathForPerfil(usuario.perfil.nome) : '/login'} replace />
+}
 
 export function App() {
   return (
@@ -23,7 +30,7 @@ export function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route index element={<HomeRedirect />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/hospedes" element={<HospedesPage />} />
             <Route path="/hospedes/novo" element={<HospedeFormPage />} />

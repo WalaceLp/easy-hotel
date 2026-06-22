@@ -3,22 +3,30 @@ import { useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Button } from '../components/Button'
 import { useAuth } from '../hooks/useAuth'
+import type { PerfilNome } from '../types/api'
+import { perfilPermitido } from '../utils/permissions'
 
 const navItems = [
-  { to: '/dashboard', label: 'Dashboard', icon: FileBarChart },
+  { to: '/dashboard', label: 'Dashboard', icon: FileBarChart, perfis: ['ADMINISTRADOR', 'GERENTE'] },
   { to: '/hospedes', label: 'Hóspedes', icon: Users },
   { to: '/quartos', label: 'Quartos', icon: Hotel },
-  { to: '/tipos-quarto', label: 'Tipos', icon: BedDouble },
+  { to: '/tipos-quarto', label: 'Tipos', icon: BedDouble, perfis: ['ADMINISTRADOR', 'GERENTE'] },
   { to: '/reservas', label: 'Reservas', icon: CalendarDays },
-  { to: '/pagamentos', label: 'Pagamentos', icon: CreditCard },
-  { to: '/usuarios', label: 'Usuários', icon: Users },
-  { to: '/relatorios', label: 'Relatórios', icon: FileBarChart }
-]
+  { to: '/pagamentos', label: 'Pagamentos', icon: CreditCard, perfis: ['ADMINISTRADOR', 'GERENTE'] },
+  { to: '/usuarios', label: 'Usuários', icon: Users, perfis: ['ADMINISTRADOR'] },
+  { to: '/relatorios', label: 'Relatórios', icon: FileBarChart, perfis: ['ADMINISTRADOR', 'GERENTE'] }
+] satisfies Array<{
+  to: string
+  label: string
+  icon: typeof FileBarChart
+  perfis?: PerfilNome[]
+}>
 
 export function AppLayout() {
   const { usuario, logout } = useAuth()
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
+  const visibleNavItems = navItems.filter((item) => perfilPermitido(usuario?.perfil.nome, item.perfis))
 
   function handleLogout() {
     logout()
@@ -37,7 +45,7 @@ export function AppLayout() {
         </div>
       </div>
       <nav className="flex-1 space-y-1 p-3">
-        {navItems.map((item) => (
+        {visibleNavItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}

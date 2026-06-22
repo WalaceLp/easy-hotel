@@ -10,6 +10,7 @@ import { TextField } from '../components/FormField'
 import { useAuth } from '../hooks/useAuth'
 import { getApiError } from '../services/api'
 import { loginSchema } from '../schemas/forms'
+import { getHomePathForPerfil } from '../utils/permissions'
 
 type LoginForm = z.infer<typeof loginSchema>
 
@@ -26,13 +27,13 @@ export function LoginPage() {
     defaultValues: { login: 'admin', senha: 'admin123' }
   })
 
-  if (usuario) return <Navigate to="/dashboard" replace />
+  if (usuario) return <Navigate to={getHomePathForPerfil(usuario.perfil.nome)} replace />
 
   async function onSubmit(data: LoginForm) {
     setError('')
     try {
-      await login(data.login, data.senha)
-      navigate('/dashboard')
+      const usuarioAutenticado = await login(data.login, data.senha)
+      navigate(getHomePathForPerfil(usuarioAutenticado.perfil.nome))
     } catch (err) {
       setError(getApiError(err))
     }
